@@ -10,12 +10,10 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(helmet());
 app.use(rateLimit({ windowMs: 60_000, max: 120 }));
 
-// 헬스
 app.get("/health", (req, res) => {
   res.json({ ok: true, time: new Date().toISOString() });
 });
 
-// DB 연결 확인
 app.get("/dbcheck", async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT 1+1 AS ok");

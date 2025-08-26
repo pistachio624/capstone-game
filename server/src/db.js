@@ -1,11 +1,19 @@
 ﻿require("dotenv").config();
 const mysql = require("mysql2/promise");
+const fs = require("fs");
 
 let ssl;
 if (process.env.DB_SSL === "true") {
   ssl = { minVersion: "TLSv1.2" };
   if (process.env.DB_SSL_CA) {
     ssl.ca = process.env.DB_SSL_CA.replace(/\\n/g, "\n");
+  }
+  if (process.env.DB_SSL_CA_PATH) {
+    try {
+      ssl.ca = fs.readFileSync(process.env.DB_SSL_CA_PATH, "utf8");
+    } catch (e) {
+      console.error("Failed to read CA file:", e.message);
+    }
   }
 }
 
